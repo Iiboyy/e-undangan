@@ -1,32 +1,19 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { supabase } from '@/lib/supabase'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Data ucapan awal (opsional — bisa diambil dari API/DB)
-const initialWishes = [
-  {
-    name: 'Budi Santoso',
-    relation: 'Sahabat',
-    message: 'Selamat menempuh hidup baru! Semoga rumah tangga kalian selalu dipenuhi cinta, keberkahan, dan kebahagiaan. Barakallahu lakuma.',
-    time: '2 jam lalu',
-  },
-  {
-    name: 'Siti Rahayu',
-    relation: 'Keluarga',
-    message: 'Moga menjadi keluarga yang sakinah, mawaddah, warahmah. Semoga langgeng sampai kakek nenek ya Chelsea & Ranu! 🤍',
-    time: '5 jam lalu',
-  },
-  {
-    name: 'Andi Prasetyo',
-    relation: 'Rekan Kerja',
-    message: 'Barakallahu fi lailati zafaf wa baaraka alaykumaa. Selamat bahagia selalu!',
-    time: '1 hari lalu',
-  },
-]
+function timeAgo(dateStr) {
+  const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000)
+  if (diff < 60)         return 'Baru saja'
+  if (diff < 3600)       return `${Math.floor(diff / 60)} menit lalu`
+  if (diff < 86400)      return `${Math.floor(diff / 3600)} jam lalu`
+  return `${Math.floor(diff / 86400)} hari lalu`
+}
 
-function WishCard({ wish, index }) {
+function WishCard({ wish }) {
   return (
     <div
       className="wish-card opacity-0 border border-gold/15 bg-white/40 backdrop-blur-sm rounded-sm px-6 py-6 space-y-3 transition-all duration-500 hover:border-gold/35 hover:shadow-lg"
@@ -36,29 +23,46 @@ function WishCard({ wish, index }) {
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/20 to-sage/20 border border-gold/30 flex items-center justify-center flex-shrink-0">
             <span className="font-cormorant text-gold text-base font-light">
-              {wish.name.charAt(0)}
+              {wish.nama.charAt(0)}
             </span>
           </div>
           <div>
-            <p className="font-cormorant text-sage-dark text-base font-semibold">{wish.name}</p>
-            <p className="font-elle text-gold/70 text-xs tracking-wider">{wish.relation}</p>
+            <p className="font-cormorant text-sage-dark text-base font-semibold">{wish.nama}</p>
           </div>
         </div>
-        <p className="font-elle text-sage-dark/40 text-xs flex-shrink-0 mt-1">{wish.time}</p>
+        <p className="font-elle text-sage-dark/40 text-xs flex-shrink-0 mt-1">
+          {timeAgo(wish.created_at)}
+        </p>
       </div>
       <div className="w-full h-px bg-gold/15" />
-      <p className="font-cormorant text-sage-dark/75 text-base leading-relaxed italic">"{wish.message}"</p>
+      <p className="font-cormorant text-sage-dark/75 text-base leading-relaxed italic">"{wish.pesan}"</p>
     </div>
   )
 }
 
 export default function Wishes() {
   const sectionRef = useRef(null)
-  const [wishes, setWishes] = useState(initialWishes)
-  const [form, setForm] = useState({ name: '', relation: '', message: '' })
-  const [status, setStatus] = useState('idle')
   const wishListRef = useRef(null)
+  const [wishes, setWishes]   = useState([])
+  const [loading, setLoading] = useState(true)
+  const [form, setForm]       = useState({ nama: '', pesan: '' })
+  const [status, setStatus]   = useState('idle') // idle | loading | success | error
 
+  // ── Fetch ucapan dari Supabase ────────────────────────────
+  const fetchWishes = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('wishes')
+      .select('id, nama, pesan, created_at')
+      .order('created_at', { ascending: false })
+      .limit(50)
+
+    if (!error && data) setWishes(data)
+    setLoading(false)
+  }, [])
+
+  useEffect(() => { fetchWishes() }, [fetchWishes])
+
+  // ── GSAP animations ───────────────────────────────────────
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo('.wishes-title',
@@ -77,21 +81,28 @@ export default function Wishes() {
       )
     }, sectionRef)
     return () => ctx.revert()
-  }, [])
+  }, [wishes]) // re-run saat wishes berubah supaya kartu baru ikut animasi
 
+  // ── Submit ucapan ─────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!form.name || !form.message) return
+    if (!form.nama || !form.pesan) return
     setStatus('loading')
-    await new Promise(r => setTimeout(r, 800))
-    const newWish = {
-      name: form.name,
-      relation: form.relation || 'Tamu',
-      message: form.message,
-      time: 'Baru saja',
+
+    const { data, error } = await supabase
+      .from('wishes')
+      .insert({ nama: form.nama, pesan: form.pesan })
+      .select()
+      .single()
+
+    if (error) {
+      setStatus('error')
+      return
     }
-    setWishes(w => [newWish, ...w])
-    setForm({ name: '', relation: '', message: '' })
+
+    // Tambah ke state lokal supaya langsung muncul tanpa refetch
+    setWishes(w => [data, ...w])
+    setForm({ nama: '', pesan: '' })
     setStatus('success')
     setTimeout(() => setStatus('idle'), 2500)
     wishListRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -108,6 +119,7 @@ export default function Wishes() {
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto">
+        {/* Title */}
         <div className="wishes-title text-center mb-14 space-y-3 opacity-0">
           <p className="font-cormorant text-gold tracking-[0.4em] text-xs uppercase">Doa & Restu</p>
           <h2 className="font-cormorant text-sage-dark text-4xl md:text-5xl font-light italic">Ucapan & Doa</h2>
@@ -121,7 +133,7 @@ export default function Wishes() {
           </p>
         </div>
 
-        {/* Form kirim ucapan */}
+        {/* Form */}
         <div className="wishes-form-wrap opacity-0 mb-12">
           <form onSubmit={handleSubmit}
             className="border border-gold/20 bg-white/40 backdrop-blur-sm rounded-sm px-8 py-8 space-y-5"
@@ -130,36 +142,31 @@ export default function Wishes() {
             <p className="font-cormorant text-sage-dark text-xl italic text-center">Tulis Ucapan Anda</p>
             <div className="w-8 h-px bg-gold/30 mx-auto" />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="font-elle text-gold text-xs tracking-widest uppercase">Nama</label>
-                <input
-                  type="text" name="name" value={form.name} required
-                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  placeholder="Nama Anda"
-                  className="w-full bg-transparent border-b border-gold/30 focus:border-gold/70 outline-none py-2 font-cormorant text-sage-dark text-base placeholder:text-sage-dark/30 transition-colors duration-300"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="font-elle text-gold text-xs tracking-widest uppercase">Hubungan</label>
-                <input
-                  type="text" name="relation" value={form.relation}
-                  onChange={e => setForm(f => ({ ...f, relation: e.target.value }))}
-                  placeholder="Misal: Sahabat, Keluarga..."
-                  className="w-full bg-transparent border-b border-gold/30 focus:border-gold/70 outline-none py-2 font-cormorant text-sage-dark text-base placeholder:text-sage-dark/30 transition-colors duration-300"
-                />
-              </div>
+            <div className="space-y-1.5">
+              <label className="font-elle text-gold text-xs tracking-widest uppercase">Nama</label>
+              <input
+                type="text" value={form.nama} required
+                onChange={e => setForm(f => ({ ...f, nama: e.target.value }))}
+                placeholder="Nama Anda"
+                className="w-full bg-transparent border-b border-gold/30 focus:border-gold/70 outline-none py-2 font-cormorant text-sage-dark text-base placeholder:text-sage-dark/30 transition-colors duration-300"
+              />
             </div>
 
             <div className="space-y-1.5">
               <label className="font-elle text-gold text-xs tracking-widest uppercase">Ucapan & Doa</label>
               <textarea
-                name="message" value={form.message} required rows={3}
-                onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                value={form.pesan} required rows={3}
+                onChange={e => setForm(f => ({ ...f, pesan: e.target.value }))}
                 placeholder="Tuliskan ucapan dan doa terbaik Anda..."
                 className="w-full bg-transparent border-b border-gold/30 focus:border-gold/70 outline-none py-2 font-cormorant text-sage-dark text-base placeholder:text-sage-dark/30 transition-colors duration-300 resize-none"
               />
             </div>
+
+            {status === 'error' && (
+              <p className="font-elle text-red-400 text-xs tracking-wider text-center">
+                Terjadi kesalahan. Silakan coba lagi.
+              </p>
+            )}
 
             <button
               type="submit" disabled={status === 'loading'}
@@ -170,13 +177,36 @@ export default function Wishes() {
           </form>
         </div>
 
-        {/* Daftar ucapan */}
+        {/* List ucapan */}
         <div ref={wishListRef} className="wishes-list space-y-4">
-          {wishes.map((wish, i) => (
-            <WishCard key={i} wish={wish} index={i} />
-          ))}
+          {loading ? (
+            // Skeleton loader
+            [...Array(3)].map((_, i) => (
+              <div key={i} className="border border-gold/10 bg-white/30 rounded-sm px-6 py-6 space-y-3 animate-pulse">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-gold/10" />
+                  <div className="space-y-1.5">
+                    <div className="w-28 h-3 bg-gold/10 rounded" />
+                    <div className="w-16 h-2 bg-gold/10 rounded" />
+                  </div>
+                </div>
+                <div className="w-full h-px bg-gold/10" />
+                <div className="space-y-2">
+                  <div className="w-full h-2.5 bg-gold/10 rounded" />
+                  <div className="w-3/4 h-2.5 bg-gold/10 rounded" />
+                </div>
+              </div>
+            ))
+          ) : wishes.length === 0 ? (
+            <p className="font-cormorant text-sage-dark/50 text-center text-lg italic py-10">
+              Belum ada ucapan. Jadilah yang pertama! 🤍
+            </p>
+          ) : (
+            wishes.map(wish => <WishCard key={wish.id} wish={wish} />)
+          )}
         </div>
 
+        {/* Footer */}
         <div className="text-center mt-14 space-y-3">
           <div className="flex items-center justify-center gap-4">
             <div className="w-12 h-px bg-gold/50" />
@@ -191,4 +221,4 @@ export default function Wishes() {
       </div>
     </section>
   )
-}
+}   

@@ -49,23 +49,30 @@ function CountBox({ value, label, flip }) {
 export default function Countdown() {
   const sectionRef = useRef(null)
   const [time, setTime] = useState(getTimeLeft())
-  const [prevTime, setPrevTime] = useState(getTimeLeft())
   const [flipped, setFlipped] = useState({ days: false, hours: false, minutes: false, seconds: false })
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const next = getTimeLeft()
+      const newTime = getTimeLeft()
+      
+      // Track which values changed
       setFlipped({
-        days: next.days !== prevTime.days,
-        hours: next.hours !== prevTime.hours,
-        minutes: next.minutes !== prevTime.minutes,
-        seconds: next.seconds !== prevTime.seconds,
+        days: newTime.days !== time.days,
+        hours: newTime.hours !== time.hours,
+        minutes: newTime.minutes !== time.minutes,
+        seconds: newTime.seconds !== time.seconds,
       })
-      setPrevTime(time)
-      setTime(next)
+      
+      setTime(newTime)
+      
+      // Reset flip animation after a short delay
+      setTimeout(() => {
+        setFlipped({ days: false, hours: false, minutes: false, seconds: false })
+      }, 450)
     }, 1000)
+    
     return () => clearInterval(interval)
-  }, [time, prevTime])
+  }, [time.days, time.hours, time.minutes, time.seconds]) // Only depend on the values we compare
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -130,7 +137,6 @@ export default function Countdown() {
       </div>
 
       <div className="relative z-10 max-w-3xl mx-auto">
-
         {/* Title */}
         <div className="countdown-title text-center mb-14 space-y-3 opacity-0">
           <p className="font-cormorant text-gold tracking-[0.4em] text-xs uppercase">
@@ -197,97 +203,42 @@ export default function Countdown() {
           )}
         </div>
 
-        {/* Event Info */}
-        <div className="countdown-info opacity-0 mt-16 space-y-8">
-
-          {/* Divider */}
+        {/* Penutup */}
+        <div className="text-center mt-10 space-y-3">
           <div className="flex items-center justify-center gap-4">
-            <div className="w-16 h-px bg-gold/40" />
+            <div className="w-12 h-px bg-gold/50" />
             <div className="w-1.5 h-1.5 bg-gold rotate-45" />
-            <div className="w-16 h-px bg-gold/40" />
+            <div className="w-12 h-px bg-gold/50" />
           </div>
-
-          {/* Two events */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6">
-
-            {/* Akad Nikah */}
-            <div className="text-center space-y-3 group">
-              <div
-                className="mx-auto w-full max-w-xs rounded-sm px-6 py-7 border border-gold/20 bg-white/40 backdrop-blur-sm transition-all duration-500 group-hover:border-gold/50 group-hover:shadow-lg"
-                style={{ boxShadow: '0 2px 24px 0 rgba(180,155,100,0.07)' }}
-              >
-                <p className="font-cormorant text-gold tracking-[0.3em] text-xs uppercase mb-3">
-                  Akad Nikah
-                </p>
-                <h3 className="font-cormorant text-sage-dark text-2xl italic font-light mb-4">
-                  Jumat, 13 Februari 2026
-                </h3>
-                <div className="w-8 h-px bg-gold/40 mx-auto mb-4" />
-                <div className="space-y-1">
-                  <p className="font-elle text-sage-dark/70 text-sm">
-                    Pukul 09.00 WIB
-                  </p>
-                  <p className="font-elle text-sage-dark/60 text-sm leading-relaxed">
-                    KUA Kecamatan Semarang Utara
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Resepsi */}
-            <div className="text-center space-y-3 group">
-              <div
-                className="mx-auto w-full max-w-xs rounded-sm px-6 py-7 border border-gold/20 bg-white/40 backdrop-blur-sm transition-all duration-500 group-hover:border-gold/50 group-hover:shadow-lg"
-                style={{ boxShadow: '0 2px 24px 0 rgba(180,155,100,0.07)' }}
-              >
-                <p className="font-cormorant text-gold tracking-[0.3em] text-xs uppercase mb-3">
-                  Resepsi Pernikahan
-                </p>
-                <h3 className="font-cormorant text-sage-dark text-2xl italic font-light mb-4">
-                  Minggu, 19 April 2026
-                </h3>
-                <div className="w-8 h-px bg-gold/40 mx-auto mb-4" />
-                <div className="space-y-1">
-                  <p className="font-elle text-sage-dark/70 text-sm">
-                    Pukul 12.00 – 13.00 WIB
-                  </p>
-                  <p className="font-elle text-sage-dark/60 text-sm leading-relaxed">
-                    Pendopo Kinanthi<br />
-                    Krajan RT 2 RW 5, Wonolopo<br />
-                    Kec. Mijen, Semarang
-                  </p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Penutup */}
-          <div className="text-center mt-10 space-y-3">
-            <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-px bg-gold/50" />
-              <div className="w-1.5 h-1.5 bg-gold rotate-45" />
-              <div className="w-12 h-px bg-gold/50" />
-            </div>
-            <p className="font-cormorant text-sage-dark/60 text-lg italic">
-              "Kami menanti kehadiran Bapak/Ibu/Saudara/i dengan penuh suka cita."
-            </p>
-            <p className="font-elle text-gold text-sm tracking-widest">
-              — Chelsea & Ranu —
-            </p>
-          </div>
-
+          <p className="font-cormorant text-sage-dark/60 text-lg italic">
+            "Kami menanti kehadiran Bapak/Ibu/Saudara/i dengan penuh suka cita."
+          </p>
+          <p className="font-elle text-gold text-sm tracking-widest">
+            — Chelsea & Ranu —
+          </p>
         </div>
       </div>
 
       <style>{`
         @keyframes flipDown {
-          0% { transform: rotateX(0deg); }
-          50% { transform: rotateX(-90deg); opacity: 0.4; }
-          100% { transform: rotateX(0deg); opacity: 1; }
+          0% { 
+            transform: rotateX(0deg); 
+            opacity: 1;
+          }
+          50% { 
+            transform: rotateX(-90deg); 
+            opacity: 0.5;
+            background-color: rgba(180,155,100,0.1);
+          }
+          100% { 
+            transform: rotateX(0deg); 
+            opacity: 1;
+          }
         }
         .count-flip {
           animation: flipDown 0.45s ease-in-out;
+          transform-style: preserve-3d;
+          perspective: 1000px;
         }
       `}</style>
     </section>

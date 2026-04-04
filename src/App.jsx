@@ -8,7 +8,6 @@ import Events from './components/Events'
 import Gallery from './components/Gallery'
 import RSVP from './components/Rsvp'
 import Wishes from './components/Wishes'
-import Gift from './components/Gift'
 
 function App() {
   const [isOpened, setIsOpened] = useState(false)
@@ -27,7 +26,6 @@ function App() {
           <Gallery />
           <RSVP />
           <Wishes />
-          <Gift />
         </main>
       )}
     </div>

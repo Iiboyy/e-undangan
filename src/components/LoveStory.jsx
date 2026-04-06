@@ -4,28 +4,28 @@
 
   gsap.registerPlugin(ScrollTrigger)
 
-  const stories = [
-    {
-      year: '2020',
-      title: 'Awal Pertemuan',
-      desc: 'Takdir mempertemukan Chelsea dan Ranu dalam sebuah kesempatan yang sederhana namun penuh makna. Dari perkenalan singkat itu, terjalinlah sebuah persahabatan yang hangat dan tulus.'
-    },
-    {
-      year: '2022',
-      title: 'Lebih Dari Sekadar Teman',
-      desc: 'Waktu demi waktu berlalu, dan keduanya mulai menyadari bahwa ada sesuatu yang lebih dari sekadar persahabatan. Setiap percakapan terasa lebih bermakna, setiap momen terasa lebih berharga.'
-    },
-    {
-      year: '2024',
-      title: 'Sebuah Janji',
-      desc: 'Dengan restu dari kedua keluarga, Ranu mengucapkan janji untuk selalu hadir dan menjaga Chelsea. Sebuah langkah kecil yang menjadi awal dari perjalanan cinta yang sesungguhnya.'
-    },
-    {
-      year: '2026',
-      title: 'Selamanya',
-      desc: 'Kini Chelsea dan Ranu siap melangkah ke babak baru kehidupan mereka. Bukan sebuah akhir, melainkan awal yang indah dari segalanya — bersama, selamanya.'
-    },
-  ]
+const stories = [
+  {
+    year: '2011–2012',
+    title: 'Awal Pertemuan',
+    desc: 'Pertemuan sederhana terjadi di bangku Sekolah Menengah Pertama. Pada masa itu, yang hadir hanyalah perasaan ringan khas remaja—belum dalam, namun cukup untuk meninggalkan kesan yang tak terlupakan.'
+  },
+  {
+    year: '2022',
+    title: 'Dipertemukan Kembali',
+    desc: 'Setelah waktu memisahkan dalam diam, takdir mempertemukan kembali dalam versi yang lebih dewasa. Percakapan yang terjalin membawa makna baru, menghadirkan kembali rasa yang pernah ada.'
+  },
+  {
+    year: '2023',
+    title: 'Keseriusan',
+    desc: 'Hubungan yang terjalin tidak lagi sekadar perasaan, melainkan mulai diarahkan pada tujuan. Komitmen tumbuh seiring waktu, diiringi usaha untuk saling memahami, menjaga, dan menguatkan satu sama lain.'
+  },
+  {
+    year: '2025–2026',
+    title: 'Menuju Selamanya',
+    desc: 'Dengan keyakinan dan restu keluarga, langkah besar pun diambil. Lamaran menjadi awal dari janji yang diteguhkan, hingga akhirnya pada 13 Februari 2026, terucap ikrar suci dalam ikatan pernikahan.'
+  },
+]
 
   export default function LoveStory() {
     const sectionRef = useRef(null)
@@ -158,7 +158,7 @@
               <div className="w-12 h-px bg-gold/50" />
             </div>
             <p className="font-cormorant text-sage-dark/60 text-lg italic">
-              "Dua jiwa, satu tujuan — menuju ridha-Nya bersama."
+            "Bukan tentang seberapa lama mengenal, melainkan tentang memilih untuk tetap bersama dalam setiap keadaan."
             </p>
             <p className="font-elle text-gold text-sm tracking-widest">
               — Chelsea & Ranu —

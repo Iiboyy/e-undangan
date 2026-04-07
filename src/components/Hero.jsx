@@ -64,13 +64,13 @@ export default function Hero() {
           src="/src/assets/prewed-hero.jpg"
           alt=""
           className="hidden lg:block absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'blur(1px)', transform: 'scale(1.08)' }}
+          style={{ filter: 'blur(3px)', transform: 'scale(1.08)' }}
         />
         <img
           src="/src/assets/prewed-hero-mobile.jpg"
           alt=""
           className="block lg:hidden absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'blur(1px)', transform: 'scale(1.08)' }}
+          style={{ filter: 'blur(3px)', transform: 'scale(1.08)' }}
         />
 
         {/* FIX: overlay dikurangin biar gak pucet */}

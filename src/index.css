@@ -31,3 +31,23 @@ body {
   background: #C9A84C;
   border-radius: 2px;
 }
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #C9A84C;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 4px rgba(201, 168, 76, 0.4);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #C9A84C;
+  cursor: pointer;
+  border: none;
+}

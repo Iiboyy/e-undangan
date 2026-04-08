@@ -72,9 +72,9 @@ export default function Hero() {
           className="block lg:hidden absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'blur(3px)', transform: 'scale(1.08)' }}
         />
-
-        {/* FIX: overlay dikurangin biar gak pucet */}
-        <div className="absolute inset-0 bg-cream/60" />
+        <div className="absolute inset-0"
+          style={{ background: 'linear-gradient(to bottom, rgba(245,240,230,0.5) 0%, rgba(245,240,230,0.3) 50%, rgba(245,240,230,0.6) 100%)' }}
+        />
       </div>
 
       {/* ── Layer 2: Watercolor blobs ── */}
@@ -108,47 +108,57 @@ export default function Hero() {
       {/* ── Konten ── */}
       <div className="relative z-10 text-center max-w-2xl mx-auto space-y-8 backdrop-blur-[1px]">
 
+        {/* Bismillah → cream */}
         <p
-          className="hero-bismillah font-cormorant text-sage-dark text-xl md:text-2xl italic opacity-0"
-          style={{ textShadow: '0 2px 6px rgba(0,0,0,0.25)' }}
+          className="hero-bismillah font-cormorant text-xl md:text-2xl italic opacity-0"
+          style={{ color: '#F5F0E8', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}
         >
           بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم
         </p>
 
         <p
-  className="hero-wedding-of font-cormorant text-sm md:text-base tracking-[0.3em] uppercase opacity-0"
-  style={{
-    color: '#C9A646',
-    textShadow: '0 1px 4px rgba(0,0,0,0.25)',
-    letterSpacing: '0.25em'
-  }}
->
-  The Wedding of
-</p>
+          className="hero-wedding-of font-cormorant text-sm md:text-base tracking-[0.3em] uppercase opacity-0"
+          style={{
+            color: '#C9A646',
+            textShadow: '0 1px 4px rgba(0,0,0,0.25)',
+            letterSpacing: '0.25em'
+          }}
+        >
+          The Wedding of
+        </p>
+
+        {/* Nama tetap sage-dark (besar, masih terbaca) */}
         <div className="hero-names opacity-0">
           <h1
-            className="font-cormorant text-sage-dark text-6xl md:text-8xl font-medium leading-none"
-            style={{ textShadow: '0 3px 8px rgba(0,0,0,0.25)' }}
-          >
-            Chelsea
-          </h1>
+  className="font-cormorant text-6xl md:text-8xl font-medium leading-none"
+  style={{ color: '#3D5C36', textShadow: '0 0 30px rgba(61,92,54,0.8), 0 0 60px rgba(61,92,54,0.4)' }}
+>
+  Chelsea
+</h1>
           <p className="font-cormorant text-3xl md:text-4xl italic my-2"
              style={{ color: '#C9A646' }}>
             &
           </p>
           <h1
-            className="font-cormorant text-sage-dark text-6xl md:text-8xl font-medium leading-none"
-            style={{ textShadow: '0 3px 8px rgba(0,0,0,0.25)' }}
-          >
-            Ranu
-          </h1>
+  className="font-cormorant text-6xl md:text-8xl font-medium leading-none"
+ style={{ color: '#3D5C36', textShadow: '0 0 30px rgba(61,92,54,0.8), 0 0 60px rgba(61,92,54,0.4)' }}
+>
+  Ranu
+</h1>
         </div>
 
+        {/* Tanggal & lokasi → cream */}
         <div className="hero-date opacity-0 space-y-1">
-          <p className="font-elle text-sage-dark text-sm tracking-[0.3em] uppercase">
+          <p
+            className="font-elle text-sm tracking-[0.3em] uppercase"
+            style={{ color: '#F5F0E8', textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}
+          >
             Minggu, 19 April 2026
           </p>
-          <p className="font-elle text-sage-dark/70 text-xs tracking-widest">
+          <p
+            className="font-elle text-xs tracking-widest"
+            style={{ color: 'rgba(245,240,232,0.75)', textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}
+          >
             Pendopo Kinanthi, Semarang
           </p>
         </div>
@@ -159,19 +169,23 @@ export default function Hero() {
           <div className="flex-1 h-px bg-[#C9A646]/60" />
         </div>
 
+        {/* Ayat → cream */}
         <div className="hero-ayat opacity-0 space-y-3 px-4">
-          <p className="font-cormorant text-sage-dark text-base md:text-lg italic leading-relaxed">
+          <p
+            className="font-cormorant text-base md:text-lg italic leading-relaxed"
+            style={{ color: '#F5F0E8', textShadow: '0 2px 6px rgba(0,0,0,0.4)' }}
+          >
             "Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."
           </p>
           <p
-  className="font-elle text-sm tracking-[0.2em] font-medium"
-  style={{
-    color: '#C9A646',
-    textShadow: '0 1px 3px rgba(0,0,0,0.25)'
-  }}
->
-  Q.S Ar-Rum: 21
-</p>
+            className="font-elle text-sm tracking-[0.2em] font-medium"
+            style={{
+              color: '#C9A646',
+              textShadow: '0 1px 3px rgba(0,0,0,0.25)'
+            }}
+          >
+            Q.S Ar-Rum: 21
+          </p>
         </div>
 
       </div>

@@ -41,7 +41,7 @@ export default function Events({ guest }) { // 🔥 Terima props guest dari indu
       time: getReceptionTime(), // 🔥 Jam dinamis berdasarkan fungsi di atas
       place: 'Pendopo Kinanthi',
       address: 'Krajan RT 2 RW 5, Kel. Wonolopo\nKec. Mijen, Kota Semarang',
-      mapsUrl: 'https://maps.app.goo.gl/xyz2',
+      mapsUrl: 'https://maps.app.goo.gl/Td3vfgWZVMJ6crv4A?g_st=aw',
       icon: (
         <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8" xmlns="http://www.w3.org/2000/svg">
           <path d="M8 32V18M32 32V18" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>

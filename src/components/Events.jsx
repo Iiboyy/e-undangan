@@ -23,7 +23,7 @@ const events = [
   {
     type: 'Resepsi Pernikahan',
     date: 'Minggu, 19 April 2026',
-    time: '12.00 – 13.00 WIB',
+    time: '11.00 – 14.00 WIB',
     place: 'Pendopo Kinanthi',
     address: 'Krajan RT 2 RW 5, Kel. Wonolopo\nKec. Mijen, Kota Semarang',
     mapsUrl: 'https://maps.google.com/?q=Pendopo+Kinanthi+Mijen+Semarang',

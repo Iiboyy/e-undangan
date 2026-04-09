@@ -34,7 +34,7 @@ export default function Opening({ onOpen }) {
       const { data, error } = await supabase
         .from('guests')
         .select('nama, kloter, jam')
-        .eq('kode_unik', id)
+        .eq('kode', id)
         .single()
 
       if (error) {

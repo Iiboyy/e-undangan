@@ -1,10 +1,8 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-// ✅ Import gambar dulu
-import prewedHeroDesktop from './assets/images/prewed-hero.jpg'
-import prewedHeroMobile from './assets/images/prewed-hero-mobile.jpg'
+import prewedHeroDesktop from "../assets/images/prewed-hero.jpg";
+import prewedHeroMobile from "../assets/images/prewed-hero-mobile.jpg";
 
 gsap.registerPlugin(ScrollTrigger)
 

@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import gsap from 'gsap'
-import hero1 from './assets/images/hero1.jpg'
-import hero2 from './assets/images/hero2.jpg'
-import hero3 from './assets/images/hero3.jpg'
+
+// ✅ Import gambar dengan bener
+import hero1 from '../assets/images/hero1.jpg'
+import hero2 from '../assets/images/hero2.jpg'
+import hero3 from '../assets/images/hero3.jpg'
 
 const SLIDESHOW_IMAGES = [
-  hero1,   
-  hero2,   
-  hero3,   
+  hero1,
+  hero2,
+  hero3,
 ]
 
 export default function Opening({ onOpen }) {
@@ -16,26 +18,38 @@ export default function Opening({ onOpen }) {
   const id = params.get('id')
   const containerRef = useRef(null)
   const namaRef = useRef(null)
+  
+  // ✅ State declaration yang bener
   const [currentSlide, setCurrentSlide] = useState(0)
   const [nextSlide, setNextSlide] = useState(1)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  
+  // ✅ Pake const untuk useRef
   const currentImgRef = useRef(null)
   const nextImgRef = useRef(null)
   const slideIntervalRef = useRef(null)
 
-  // Fetch nama tamu
+  // Fetch nama tamu dari database
   useEffect(() => {
     const fetchGuest = async () => {
       if (!id) return
-      const { data } = await supabase
+      
+      const { data, error } = await supabase
         .from('guests')
         .select('nama')
         .eq('kode_unik', id)
         .single()
+      
+      if (error) {
+        console.error('Error fetching guest:', error)
+        return
+      }
+      
       if (data && namaRef.current) {
         namaRef.current.textContent = `Kepada Yth. ${data.nama}`
       }
     }
+    
     fetchGuest()
 
     // Animasi masuk
@@ -111,7 +125,7 @@ export default function Opening({ onOpen }) {
           />
         )}
 
-        {/* Overlay gradient halus di kanan (biar blend ke panel kanan) */}
+        {/* Overlay gradient */}
         <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-[#2D3D2A] opacity-80" />
 
         {/* Slide indicator dots */}
@@ -129,7 +143,7 @@ export default function Opening({ onOpen }) {
           ))}
         </div>
 
-        {/* Watermark kecil di pojok kiri bawah */}
+        {/* Watermark */}
         <div className="absolute bottom-8 left-8">
           <p className="text-cream/30 font-cormorant text-xs tracking-widest uppercase">
             19 April 2026
@@ -137,7 +151,7 @@ export default function Opening({ onOpen }) {
         </div>
       </div>
 
-      {/* ── KANAN: Panel Konten (full screen di mobile) ── */}
+      {/* ── KANAN: Panel Konten ── */}
       <div className="w-full lg:w-[420px] xl:w-[480px] bg-sage-dark flex flex-col items-center justify-center relative px-10 shrink-0">
         {/* Ornamen atas */}
         <div className="absolute top-8 left-0 right-0 flex justify-center">

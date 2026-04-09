@@ -13,7 +13,7 @@ const ATTENDANCE_OPTIONS = [
 export default function RSVP() {
   const sectionRef = useRef(null)
   const [form, setForm]     = useState({ nama: '', status: '', jumlah_tamu: 1 })
-  const [status, setStatus] = useState('idle') // idle | loading | success | error
+  const [status, setStatus] = useState('idle')
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -31,8 +31,6 @@ export default function RSVP() {
     return () => ctx.revert()
   }, [])
 
-  // FIX 1: Setiap kali status balik ke 'idle', paksa opacity form jadi 1
-  // karena GSAP animasi sudah selesai, form perlu visible langsung
   useEffect(() => {
     if (status === 'idle') {
       const formEl = sectionRef.current?.querySelector('.rsvp-form')
@@ -60,10 +58,17 @@ export default function RSVP() {
     setStatus('idle')
   }
 
-  // FIX 2: Pisahkan handler pilih opsi, hindari conflict antara label & input
   const handleSelectStatus = (value) => {
     setForm(f => ({ ...f, status: value }))
   }
+
+  const handleJumlahChange = (e) => {
+    const val = Math.max(1, Math.min(20, parseInt(e.target.value) || 1))
+    setForm(f => ({ ...f, jumlah_tamu: val }))
+  }
+
+  const decreaseJumlah = () => setForm(f => ({ ...f, jumlah_tamu: Math.max(1, f.jumlah_tamu - 1) }))
+  const increaseJumlah = () => setForm(f => ({ ...f, jumlah_tamu: Math.min(20, f.jumlah_tamu + 1) }))
 
   return (
     <section ref={sectionRef} className="relative bg-cream py-24 px-6 overflow-hidden">
@@ -134,7 +139,7 @@ export default function RSVP() {
               />
             </div>
 
-            {/* Kehadiran — FIX 2: pakai div + onClick, bukan label wrapping input */}
+            {/* Kehadiran */}
             <div className="space-y-3">
               <p className="font-elle text-gold text-xs tracking-widest uppercase">
                 Konfirmasi Kehadiran
@@ -163,28 +168,40 @@ export default function RSVP() {
               </div>
             </div>
 
-            {/* Jumlah tamu */}
+            {/* Jumlah tamu — input bebas + tombol +/- */}
             {form.status === 'hadir' && (
               <div className="space-y-2">
                 <label className="font-elle text-gold text-xs tracking-widest uppercase block">
                   Jumlah Tamu
                 </label>
-                <div className="flex items-center gap-4">
-                  {[1, 2, 3, 4].map(n => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setForm(f => ({ ...f, jumlah_tamu: n }))}
-                      className={`w-10 h-10 border text-sm font-cormorant transition-all duration-200 cursor-pointer
-                        ${form.jumlah_tamu === n
-                          ? 'border-gold bg-gold text-cream'
-                          : 'border-gold/30 text-sage-dark hover:border-gold/60'}`}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                  <span className="font-elle text-sage-dark/50 text-xs">orang</span>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={decreaseJumlah}
+                    className="w-9 h-9 border border-gold/30 text-sage-dark font-cormorant text-xl hover:border-gold/60 hover:bg-gold/5 transition-all duration-200 cursor-pointer flex items-center justify-center select-none"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={form.jumlah_tamu}
+                    onChange={handleJumlahChange}
+                    className="w-16 text-center bg-transparent border-b border-gold/40 focus:border-gold/70 outline-none py-1.5 font-cormorant text-sage-dark text-xl transition-colors duration-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={increaseJumlah}
+                    className="w-9 h-9 border border-gold/30 text-sage-dark font-cormorant text-xl hover:border-gold/60 hover:bg-gold/5 transition-all duration-200 cursor-pointer flex items-center justify-center select-none"
+                  >
+                    +
+                  </button>
+                  <span className="font-elle text-sage-dark/50 text-xs tracking-wider">orang</span>
                 </div>
+                <p className="font-elle text-sage-dark/40 text-xs tracking-wide">
+                  Maks. 20 orang per konfirmasi
+                </p>
               </div>
             )}
 

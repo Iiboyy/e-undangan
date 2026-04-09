@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import gsap from 'gsap'
+import hero1 from './assets/images/hero1.jpg'
+import hero2 from './assets/images/hero2.jpg'
+import hero3 from './assets/images/hero3.jpg'
 
-// Ganti array ini dengan foto-foto kamu
-// Import foto dari assets atau pakai URL langsung
 const SLIDESHOW_IMAGES = [
-  '/src/assets/images/hero1.jpg',   
-  '/src/assets/images/hero2.jpg',   
-  '/src/assets/images/hero3.jpg',   
+  hero1,   
+  hero2,   
+  hero3,   
 ]
 
 export default function Opening({ onOpen }) {

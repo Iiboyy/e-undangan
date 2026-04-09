@@ -2,6 +2,10 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+// ✅ Import gambar dulu
+import prewedHeroDesktop from './assets/images/prewed-hero.jpg'
+import prewedHeroMobile from './assets/images/prewed-hero-mobile.jpg'
+
 gsap.registerPlugin(ScrollTrigger)
 
 export default function Hero() {
@@ -61,13 +65,13 @@ export default function Hero() {
       {/* ── Layer 1: Foto blur ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <img
-          src="/src/assets/images/prewed-hero.jpg"
+          src={prewedHeroDesktop}
           alt=""
           className="hidden lg:block absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'blur(3px)', transform: 'scale(1.08)' }}
         />
         <img
-          src="/src/assets/images/prewed-hero-mobile.jpg"
+          src={prewedHeroMobile}
           alt=""
           className="block lg:hidden absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'blur(3px)', transform: 'scale(1.08)' }}
@@ -130,21 +134,21 @@ export default function Hero() {
         {/* Nama tetap sage-dark (besar, masih terbaca) */}
         <div className="hero-names opacity-0">
           <h1
-  className="font-cormorant text-6xl md:text-8xl font-medium leading-none"
-  style={{ color: '#3D5C36', textShadow: '0 0 30px rgba(61,92,54,0.8), 0 0 60px rgba(61,92,54,0.4)' }}
->
-  Chelsea
-</h1>
+            className="font-cormorant text-6xl md:text-8xl font-medium leading-none"
+            style={{ color: '#3D5C36', textShadow: '0 0 30px rgba(61,92,54,0.8), 0 0 60px rgba(61,92,54,0.4)' }}
+          >
+            Chelsea
+          </h1>
           <p className="font-cormorant text-3xl md:text-4xl italic my-2"
              style={{ color: '#C9A646' }}>
             &
           </p>
           <h1
-  className="font-cormorant text-6xl md:text-8xl font-medium leading-none"
- style={{ color: '#3D5C36', textShadow: '0 0 30px rgba(61,92,54,0.8), 0 0 60px rgba(61,92,54,0.4)' }}
->
-  Ranu
-</h1>
+            className="font-cormorant text-6xl md:text-8xl font-medium leading-none"
+            style={{ color: '#3D5C36', textShadow: '0 0 30px rgba(61,92,54,0.8), 0 0 60px rgba(61,92,54,0.4)' }}
+          >
+            Ranu
+          </h1>
         </div>
 
         {/* Tanggal & lokasi → cream */}

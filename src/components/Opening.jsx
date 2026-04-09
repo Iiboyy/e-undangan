@@ -14,10 +14,9 @@ export default function Opening({ onOpen }) {
   const id = params.get('id')
 
   const containerRef = useRef(null)
-  const namaRef = useRef(null)
+  // namaRef dihapus karena kita akan menggunakan State langsung di JSX agar lebih stabil
 
   const [guest, setGuest] = useState(null)
-
   const [currentSlide, setCurrentSlide] = useState(0)
   const [nextSlide, setNextSlide] = useState(1)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -31,23 +30,20 @@ export default function Opening({ onOpen }) {
     const fetchGuest = async () => {
       if (!id) return
 
+      // Menggunakan kolom 'kode' sesuai struktur di Supabase/Excel kamu
       const { data, error } = await supabase
         .from('guests')
         .select('nama, kloter, jam')
-        .eq('kode', id)
+        .eq('kode', id) 
         .single()
 
       if (error) {
-        console.error('Error fetching guest:', error)
+        console.error('Error fetching guest:', error.message)
         return
       }
 
       if (data) {
         setGuest(data)
-
-        if (namaRef.current) {
-          namaRef.current.textContent = `Kepada Yth. ${data.nama}`
-        }
       }
     }
 
@@ -60,7 +56,7 @@ export default function Opening({ onOpen }) {
     )
   }, [id])
 
-  // 🔥 Slideshow
+  // 🔥 Slideshow Logic
   useEffect(() => {
     if (SLIDESHOW_IMAGES.length <= 1) return
 
@@ -103,7 +99,7 @@ export default function Opening({ onOpen }) {
   return (
     <div ref={containerRef} className="fixed inset-0 z-50 flex">
       
-      {/* LEFT */}
+      {/* LEFT - Slideshow Section */}
       <div className="hidden lg:block relative flex-1 overflow-hidden">
         <img
           ref={currentImgRef}
@@ -122,17 +118,17 @@ export default function Opening({ onOpen }) {
           />
         )}
 
+        {/* Overlay Gradient */}
         <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-[#2D3D2A] opacity-80" />
 
+        {/* Indicators */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
           {SLIDESHOW_IMAGES.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
               className={`transition-all duration-500 rounded-full ${
-                i === currentSlide
-                  ? 'w-6 h-1.5 bg-gold'
-                  : 'w-1.5 h-1.5 bg-gold/40'
+                i === currentSlide ? 'w-6 h-1.5 bg-gold' : 'w-1.5 h-1.5 bg-gold/40'
               }`}
             />
           ))}
@@ -145,7 +141,7 @@ export default function Opening({ onOpen }) {
         </div>
       </div>
 
-      {/* RIGHT */}
+      {/* RIGHT - Content Section */}
       <div className="w-full lg:w-[420px] xl:w-[480px] bg-sage-dark flex flex-col items-center justify-center relative px-10 shrink-0">
         
         <div className="absolute top-8 left-0 right-0 flex justify-center">
@@ -167,17 +163,24 @@ export default function Opening({ onOpen }) {
 
           <div className="w-16 h-px bg-gold mx-auto opacity-50" />
 
-          {/* 🔥 Nama tamu */}
-          <p
-            ref={namaRef}
-            className="text-cream/80 font-cormorant text-lg italic"
-          >
-            Kepada Yth. Tamu Undangan
-          </p>
+          {/* 🔥 Display Nama Tamu & Jam */}
+          <div className="space-y-2 py-4">
+            <p className="text-cream/80 font-cormorant text-lg italic">
+              Kepada Yth.
+            </p>
+            <h2 className="text-cream font-cormorant text-2xl xl:text-3xl font-medium">
+              {guest ? guest.nama : 'Tamu Undangan'}
+            </h2>
+            {guest?.jam && (
+              <p className="text-gold-light/60 font-elle text-[10px] tracking-[0.2em] uppercase mt-2">
+                Pukul {guest.jam}
+              </p>
+            )}
+          </div>
 
           <button
             onClick={handleOpen}
-            className="mt-8 px-10 py-3 border border-gold text-gold font-cormorant text-sm tracking-[0.2em] uppercase hover:bg-gold hover:text-sage-dark transition-all duration-500 cursor-pointer"
+            className="mt-4 px-10 py-3 border border-gold text-gold font-cormorant text-sm tracking-[0.2em] uppercase hover:bg-gold hover:text-sage-dark transition-all duration-500 cursor-pointer"
           >
             Buka Undangan
           </button>

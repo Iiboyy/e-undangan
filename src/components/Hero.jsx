@@ -61,13 +61,13 @@ export default function Hero() {
       {/* ── Layer 1: Foto blur ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <img
-          src="/src/assets/prewed-hero.jpg"
+          src="/src/assets/images/prewed-hero.jpg"
           alt=""
           className="hidden lg:block absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'blur(3px)', transform: 'scale(1.08)' }}
         />
         <img
-          src="/src/assets/prewed-hero-mobile.jpg"
+          src="/src/assets/images/prewed-hero-mobile.jpg"
           alt=""
           className="block lg:hidden absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'blur(3px)', transform: 'scale(1.08)' }}

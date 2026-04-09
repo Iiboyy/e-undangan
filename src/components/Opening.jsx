@@ -5,9 +5,9 @@ import gsap from 'gsap'
 // Ganti array ini dengan foto-foto kamu
 // Import foto dari assets atau pakai URL langsung
 const SLIDESHOW_IMAGES = [
-  '/src/assets/hero1.jpg',   
-  '/src/assets/hero2.jpg',   
-  '/src/assets/hero3.jpg',   
+  '/src/assets/images/hero1.jpg',   
+  '/src/assets/images/hero2.jpg',   
+  '/src/assets/images/hero3.jpg',   
 ]
 
 export default function Opening({ onOpen }) {

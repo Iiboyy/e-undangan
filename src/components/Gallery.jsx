@@ -1,17 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Gallery1 from '../assets/images/gallery1.jpg'
+import Gallery2 from '../assets/images/gallery2.jpg'
+import Gallery3 from '../assets/images/gallery3.jpg'
+import Gallery4 from '../assets/images/gallery4.jpg'
+import Gallery5 from '../assets/images/gallery5.jpg'
+import Gallery6 from '../assets/images/gallery6.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Placeholder photos — ganti dengan path/URL foto asli
 const photos = [
-  { src: '/images/gallery-1.jpg', caption: 'Awal Pertemuan, 2020' },
-  { src: '/images/gallery-2.jpg', caption: 'Perjalanan Bersama' },
-  { src: '/images/gallery-3.jpg', caption: 'Momen Berharga' },
-  { src: '/images/gallery-4.jpg', caption: 'Lamaran, 2024' },
-  { src: '/images/gallery-5.jpg', caption: 'Prewedding' },
-  { src: '/images/gallery-6.jpg', caption: 'Chelsea & Ranu' },
+  { src: Gallery1},
+  { src: Gallery2},
+  { src: Gallery3},
+  { src: Gallery4},
+  { src: Gallery5},
+  { src: Gallery6},
 ]
 
 function PhotoCard({ photo, index, onClick }) {
@@ -29,6 +34,7 @@ function PhotoCard({ photo, index, onClick }) {
           alt={photo.caption}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           onError={e => {
+            console.error('Gambar gagal load:', photo.src)
             e.target.style.display = 'none'
             e.target.parentNode.classList.add('photo-placeholder')
           }}
@@ -126,22 +132,31 @@ export default function Gallery() {
           onClick={() => setLightbox(null)}
         >
           <div className="relative max-w-2xl w-full" onClick={e => e.stopPropagation()}>
-            <img src={photos[lightbox].src} alt={photos[lightbox].caption}
-              className="w-full rounded-sm border border-gold/20 shadow-2xl object-cover max-h-[80vh]" />
+            <img 
+              src={photos[lightbox].src} 
+              alt={photos[lightbox].caption}
+              className="w-full rounded-sm border border-gold/20 shadow-2xl object-cover max-h-[80vh]" 
+            />
             <p className="text-center font-cormorant text-cream/80 italic text-lg mt-4">{photos[lightbox].caption}</p>
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between mt-4 gap-2">
               <button
-                className="font-elle text-gold/70 hover:text-gold text-xs tracking-widest uppercase transition-colors"
+                className="font-elle text-gold/70 hover:text-gold text-xs tracking-widest uppercase transition-colors px-3 py-1 rounded-full hover:bg-gold/10"
                 onClick={() => setLightbox((lightbox - 1 + photos.length) % photos.length)}
-              >← Sebelumnya</button>
+              >
+                ← Sebelumnya
+              </button>
               <button
-                className="font-elle text-gold/70 hover:text-gold text-xs tracking-widest uppercase transition-colors"
+                className="font-elle text-gold/70 hover:text-gold text-xs tracking-widest uppercase transition-colors px-3 py-1 rounded-full hover:bg-gold/10"
                 onClick={() => setLightbox(null)}
-              >Tutup ✕</button>
+              >
+                Tutup ✕
+              </button>
               <button
-                className="font-elle text-gold/70 hover:text-gold text-xs tracking-widest uppercase transition-colors"
+                className="font-elle text-gold/70 hover:text-gold text-xs tracking-widest uppercase transition-colors px-3 py-1 rounded-full hover:bg-gold/10"
                 onClick={() => setLightbox((lightbox + 1) % photos.length)}
-              >Selanjutnya →</button>
+              >
+                Selanjutnya →
+              </button>
             </div>
           </div>
         </div>

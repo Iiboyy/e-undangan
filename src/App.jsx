@@ -8,6 +8,7 @@ import Events from './components/Events'
 import Gallery from './components/Gallery'
 import RSVP from './components/Rsvp'
 import Wishes from './components/Wishes'
+import Footer from './components/Footer'
 import MusicPlayer from './components/MusicPlayer'
 
 function App() {
@@ -104,6 +105,7 @@ function App() {
             <Gallery />
             <RSVP />
             <Wishes />
+            <Footer />
           </main>
           <MusicPlayer audioRef={audioRef} />
         </>

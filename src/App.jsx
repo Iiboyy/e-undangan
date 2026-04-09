@@ -14,17 +14,13 @@ import AdminRsvp from './components/AdminRsvp'
 
 function App() {
   const [isOpened, setIsOpened] = useState(false)
-  // 🔥 State global untuk menyimpan data tamu dari Supabase
   const [guest, setGuest] = useState(null) 
   
   const audioRef = useRef(null)
 
-  // Cek apakah ini halaman admin: /admin
   const isAdmin = window.location.pathname === '/admin'
 
-  // Fungsi ini dipanggil saat tombol "Buka Undangan" di klik
   const handleOpen = (guestData) => {
-    // Simpan data tamu yang berhasil di-fetch oleh Opening ke state global
     if (guestData) {
       setGuest(guestData)
     }

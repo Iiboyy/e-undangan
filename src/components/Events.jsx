@@ -26,8 +26,8 @@ export default function Events({ guest }) { // 🔥 Terima props guest dari indu
       date: 'Jumat, 13 Februari 2026',
       time: '09.00 WIB',
       place: 'KUA Kecamatan Semarang Utara',
-      address: 'Jl. Gondomono No. 9, Kel. Bulu Lor\nKec. Semarang Utara, Kota Semarang',
-      mapsUrl: 'https://maps.app.goo.gl/xyz1', // Pastikan URL benar
+      address: 'Jl. Tambra Dalam II No.10, Kuningan, Kec. Semarang Utara, Kota Semarang, Jawa Tengah 50176',
+      mapsUrl: 'https://maps.app.goo.gl/yNsSo3MK7ZZp8MLE8', // Pastikan URL benar
       icon: (
         <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8" xmlns="http://www.w3.org/2000/svg">
           <circle cx="20" cy="14" r="5" stroke="currentColor" strokeWidth="1.2"/>
@@ -40,7 +40,7 @@ export default function Events({ guest }) { // 🔥 Terima props guest dari indu
       date: 'Minggu, 19 April 2026',
       time: getReceptionTime(), // 🔥 Jam dinamis berdasarkan fungsi di atas
       place: 'Pendopo Kinanthi',
-      address: 'Krajan RT 2 RW 5, Kel. Wonolopo\nKec. Mijen, Kota Semarang',
+      address: 'Perumahan Wonolopo Asri, Wonolopo, Kec. Mijen, Kota Semarang, Jawa Tengah 50215',
       mapsUrl: 'https://maps.app.goo.gl/Td3vfgWZVMJ6crv4A?g_st=aw',
       icon: (
         <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8" xmlns="http://www.w3.org/2000/svg">

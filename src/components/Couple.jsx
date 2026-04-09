@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Bride from '../assets/images/bride.jpg'
+import Groom from '../assets/images/groom.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -104,7 +106,6 @@ export default function Couple() {
       )
 
       // ── Corner florals — spring entrance, one-shot ────────────────────────
-      // TL corner: tumbuh dari pojok kiri atas
       gsap.fromTo('.floral-tl',
         { opacity: 0, scale: 0.5, rotation: -20, transformOrigin: '0% 0%' },
         {
@@ -115,7 +116,6 @@ export default function Couple() {
         }
       )
 
-      // TR corner: mirror kanan atas
       gsap.fromTo('.floral-tr',
         { opacity: 0, scale: 0.5, rotation: 20, transformOrigin: '100% 0%' },
         {
@@ -127,7 +127,6 @@ export default function Couple() {
         }
       )
 
-      // BL corner: tumbuh dari pojok kiri bawah
       gsap.fromTo('.floral-bl',
         { opacity: 0, scale: 0.5, rotation: 18, transformOrigin: '0% 100%' },
         {
@@ -139,7 +138,6 @@ export default function Couple() {
         }
       )
 
-      // BR corner: mirror kanan bawah
       gsap.fromTo('.floral-br',
         { opacity: 0, scale: 0.5, rotation: -18, transformOrigin: '100% 100%' },
         {
@@ -151,7 +149,6 @@ export default function Couple() {
         }
       )
 
-      // ── Mid sprigs — slide in dari samping, one-shot ──────────────────────
       gsap.fromTo('.floral-mid-l',
         { opacity: 0, x: -30 },
         {
@@ -174,7 +171,6 @@ export default function Couple() {
         }
       )
 
-      // ── Scatter — fade naik, one-shot ─────────────────────────────────────
       gsap.fromTo('.floral-scatter-1, .floral-scatter-2',
         { opacity: 0, y: 16 },
         {
@@ -187,7 +183,7 @@ export default function Couple() {
         }
       )
 
-      // ── Parallax scroll — depth effect saat scroll ────────────────────────
+      // ── Parallax scroll ────────────────────────────────────────────────
       gsap.to('.floral-tl', {
         y: -60,
         scrollTrigger: {
@@ -230,7 +226,6 @@ export default function Couple() {
 
     }, sectionRef)
 
-    // ── Hover micro-interaction — hanya bergerak saat hover ─────────────────
     const floralEls = document.querySelectorAll(
       '.floral-tl, .floral-tr, .floral-bl, .floral-br'
     )
@@ -277,43 +272,34 @@ export default function Couple() {
       </div>
 
       {/* ── Floral decorations ────────────────────────────────────────────── */}
-
-      {/* Corner TL */}
       <FloralCorner
         className="floral-tl absolute top-0 left-0 w-48 h-48 md:w-64 md:h-64 pointer-events-none"
         style={{ opacity: 0 }}
       />
-      {/* Corner TR */}
       <FloralCorner
         className="floral-tr absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 pointer-events-none"
         style={{ opacity: 0, transform: 'scaleX(-1)' }}
       />
-      {/* Corner BL */}
       <FloralCorner
         className="floral-bl absolute bottom-0 left-0 w-40 h-40 md:w-56 md:h-56 pointer-events-none"
         style={{ opacity: 0, transform: 'scaleY(-1)' }}
       />
-      {/* Corner BR */}
       <FloralCorner
         className="floral-br absolute bottom-0 right-0 w-40 h-40 md:w-56 md:h-56 pointer-events-none"
         style={{ opacity: 0, transform: 'scale(-1, -1)' }}
       />
-      {/* Mid left sprig */}
       <FloralSprig
         className="floral-mid-l absolute left-4 top-1/2 -translate-y-1/2 w-12 h-24 md:w-16 md:h-32 pointer-events-none hidden md:block"
         style={{ opacity: 0 }}
       />
-      {/* Mid right sprig */}
       <FloralSprig
         className="floral-mid-r absolute right-4 top-1/2 -translate-y-1/2 w-12 h-24 md:w-16 md:h-32 pointer-events-none hidden md:block"
         style={{ opacity: 0, transform: 'translateY(-50%) scaleX(-1)' }}
       />
-      {/* Scatter top center */}
       <FloralScatter
         className="floral-scatter-1 absolute top-8 left-1/2 -translate-x-1/2 w-32 h-32 pointer-events-none"
         style={{ opacity: 0 }}
       />
-      {/* Scatter bottom center */}
       <FloralScatter
         className="floral-scatter-2 absolute bottom-8 left-1/2 -translate-x-1/2 w-28 h-28 pointer-events-none"
         style={{ opacity: 0, transform: 'translateX(-50%) rotate(180deg)' }}
@@ -340,14 +326,21 @@ export default function Couple() {
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
 
-          {/* Bride */}
+          {/* Bride - dengan foto */}
           <div className="bride-card text-center space-y-6" style={{ opacity: 0 }}>
             <div className="relative mx-auto w-48 h-48 md:w-56 md:h-56">
+              {/* Border luar */}
               <div className="absolute inset-0 border border-gold/40 rounded-full -rotate-6" />
-              <div className="absolute inset-2 bg-sage/30 rounded-full overflow-hidden flex items-center justify-center">
-                <span className="font-cormorant text-cream/40 text-6xl italic">C</span>
+              {/* Lingkaran dalam dengan foto */}
+              <div className="absolute inset-2 rounded-full overflow-hidden bg-sage/30">
+                <img 
+                  src={Bride} 
+                  alt="Chelsea Rosari Mahakintha Samoling"
+                  className="w-full h-full object-cover object-center"
+                />
               </div>
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gold px-4 py-1">
+              {/* Label di bawah */}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gold px-4 py-1 z-10">
                 <p className="font-cormorant text-sage-dark text-xs tracking-[0.2em] uppercase whitespace-nowrap">
                   The Bride
                 </p>
@@ -367,14 +360,21 @@ export default function Couple() {
             </div>
           </div>
 
-          {/* Groom */}
+          {/* Groom - dengan foto */}
           <div className="groom-card text-center space-y-6" style={{ opacity: 0 }}>
             <div className="relative mx-auto w-48 h-48 md:w-56 md:h-56">
+              {/* Border luar */}
               <div className="absolute inset-0 border border-gold/40 rounded-full rotate-6" />
-              <div className="absolute inset-2 bg-sage/30 rounded-full overflow-hidden flex items-center justify-center">
-                <span className="font-cormorant text-cream/40 text-6xl italic">R</span>
+              {/* Lingkaran dalam dengan foto */}
+              <div className="absolute inset-2 rounded-full overflow-hidden bg-sage/30">
+                <img 
+                  src={Groom} 
+                  alt="Ranu Barta Fahrizal"
+                  className="w-full h-full object-cover object-center"
+                />
               </div>
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gold px-4 py-1">
+              {/* Label di bawah */}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gold px-4 py-1 z-10">
                 <p className="font-cormorant text-sage-dark text-xs tracking-[0.2em] uppercase whitespace-nowrap">
                   The Groom
                 </p>

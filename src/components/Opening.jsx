@@ -85,16 +85,17 @@ export default function Opening({ onOpen }) {
     return () => clearInterval(slideIntervalRef.current)
   }, [currentSlide])
 
-  const handleOpen = () => {
-    clearInterval(slideIntervalRef.current)
-    gsap.to(containerRef.current, {
-      opacity: 0,
-      y: -30,
-      duration: 0.8,
-      ease: 'power2.in',
-      onComplete: onOpen
-    })
-  }
+// Di dalam Opening.jsx bagian handleOpen:
+const handleOpen = () => {
+  clearInterval(slideIntervalRef.current)
+  gsap.to(containerRef.current, {
+    opacity: 0,
+    y: -30,
+    duration: 0.8,
+    ease: 'power2.in',
+    onComplete: () => onOpen(guest) // <--- PASTIKAN variabel 'guest' dikirim di sini!
+  })
+}
 
   return (
     <div ref={containerRef} className="fixed inset-0 z-50 flex">

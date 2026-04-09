@@ -14,12 +14,21 @@ import AdminRsvp from './components/AdminRsvp'
 
 function App() {
   const [isOpened, setIsOpened] = useState(false)
+  // 🔥 State global untuk menyimpan data tamu dari Supabase
+  const [guest, setGuest] = useState(null) 
+  
   const audioRef = useRef(null)
 
   // Cek apakah ini halaman admin: /admin
   const isAdmin = window.location.pathname === '/admin'
 
-  const handleOpen = () => {
+  // Fungsi ini dipanggil saat tombol "Buka Undangan" di klik
+  const handleOpen = (guestData) => {
+    // Simpan data tamu yang berhasil di-fetch oleh Opening ke state global
+    if (guestData) {
+      setGuest(guestData)
+    }
+
     if (audioRef.current) {
       audioRef.current.volume = 0.7
       audioRef.current.play().catch(() => {
@@ -29,6 +38,7 @@ function App() {
     setIsOpened(true)
   }
 
+  // --- Efek Audio & Musik ---
   useEffect(() => {
     if (isAdmin) return
     const handleVisibilityChange = () => {
@@ -74,7 +84,9 @@ function App() {
   return (
     <div className="min-h-screen bg-cream font-elle">
       <audio ref={audioRef} src="/music.mp3" loop preload="auto" />
+      
       {!isOpened ? (
+        /* Kirim handleOpen ke komponen Opening */
         <Opening onOpen={handleOpen} />
       ) : (
         <>
@@ -83,7 +95,8 @@ function App() {
             <Couple />
             <LoveStory />
             <Countdown />
-            <Events />
+            {/* 🔥 SEKARANG DATA GUEST DIKIRIM KE EVENTS AGAR JAM KLOTER MUNCUL */}
+            <Events guest={guest} /> 
             <Gallery />
             <RSVP />
             <Wishes />

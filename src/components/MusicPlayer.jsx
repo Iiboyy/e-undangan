@@ -11,7 +11,6 @@ export default function MusicPlayer({ audioRef }) {
 
   const noteVariants = ['♩', '♪', '♫', '♬']
 
-  // Animasi masuk
   useEffect(() => {
     gsap.fromTo(playerRef.current,
       { opacity: 0, y: 20 },
@@ -19,13 +18,73 @@ export default function MusicPlayer({ audioRef }) {
     )
   }, [])
 
-  // Sync volume ke audio
   useEffect(() => {
     if (!audioRef.current) return
     audioRef.current.volume = isMuted ? 0 : volume
   }, [volume, isMuted])
 
-  // Animasi note berganti saat playing
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!audioRef.current) return
+
+      if (document.hidden) {
+        if (isPlaying && !isMuted) {
+          audioRef.current.pause()
+        }
+      } else {
+        if (isPlaying && !isMuted) {
+          const playPromise = audioRef.current.play()
+          if (playPromise !== undefined) {
+            playPromise.catch(error => {
+              console.log("Autoplay prevented:", error)
+              setIsPlaying(false)
+            })
+          }
+        }
+      }
+    }
+
+    const handlePageUnload = () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('beforeunload', handlePageUnload)
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('beforeunload', handlePageUnload)
+    }
+  }, [isPlaying, isMuted])
+
+  useEffect(() => {
+    const handleFirstInteraction = async () => {
+      if (audioRef.current && !isPlaying) {
+        try {
+          await audioRef.current.play()
+          setIsPlaying(true)
+        } catch (error) {
+          console.log("User interaction required for audio:", error)
+        }
+      }
+      document.removeEventListener('click', handleFirstInteraction)
+      document.removeEventListener('touchstart', handleFirstInteraction)
+    }
+
+    if (isPlaying && audioRef.current && audioRef.current.paused) {
+      document.addEventListener('click', handleFirstInteraction)
+      document.addEventListener('touchstart', handleFirstInteraction)
+    }
+
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction)
+      document.removeEventListener('touchstart', handleFirstInteraction)
+    }
+  }, [])
+
   useEffect(() => {
     if (!isPlaying || isMuted) return
     const interval = setInterval(() => {
@@ -39,7 +98,12 @@ export default function MusicPlayer({ audioRef }) {
     if (isPlaying) {
       audioRef.current.pause()
     } else {
-      audioRef.current.play()
+      const playPromise = audioRef.current.play()
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Play failed:", error)
+        })
+      }
     }
     setIsPlaying(prev => !prev)
   }

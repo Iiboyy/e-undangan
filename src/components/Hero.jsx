@@ -113,7 +113,7 @@ export default function Hero() {
         {/* Bismillah → cream */}
         <p
           className="hero-bismillah font-cormorant text-xl md:text-2xl italic opacity-0"
-          style={{ color: '#F5F0E8', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}
+          style={{ color: '#C9A646', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}
         >
           بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم
         </p>
@@ -121,7 +121,7 @@ export default function Hero() {
         <p
           className="hero-wedding-of font-cormorant text-sm md:text-base tracking-[0.3em] uppercase opacity-0"
           style={{
-            color: '#C9A646',
+            color: '#F5F0E8',
             textShadow: '0 1px 4px rgba(0,0,0,0.25)',
             letterSpacing: '0.25em'
           }}

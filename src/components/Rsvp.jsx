@@ -12,7 +12,7 @@ const ATTENDANCE_OPTIONS = [
 
 export default function RSVP() {
   const sectionRef = useRef(null)
-  const [form, setForm]   = useState({ nama: '', status: '', jumlah_tamu: 1 })
+  const [form, setForm]     = useState({ nama: '', status: '', jumlah_tamu: 1 })
   const [status, setStatus] = useState('idle') // idle | loading | success | error
 
   useEffect(() => {
@@ -31,6 +31,15 @@ export default function RSVP() {
     return () => ctx.revert()
   }, [])
 
+  // FIX 1: Setiap kali status balik ke 'idle', paksa opacity form jadi 1
+  // karena GSAP animasi sudah selesai, form perlu visible langsung
+  useEffect(() => {
+    if (status === 'idle') {
+      const formEl = sectionRef.current?.querySelector('.rsvp-form')
+      if (formEl) gsap.set(formEl, { opacity: 1, y: 0 })
+    }
+  }, [status])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.nama || !form.status) return
@@ -44,6 +53,16 @@ export default function RSVP() {
     })
 
     setStatus(error ? 'error' : 'success')
+  }
+
+  const handleReset = () => {
+    setForm({ nama: '', status: '', jumlah_tamu: 1 })
+    setStatus('idle')
+  }
+
+  // FIX 2: Pisahkan handler pilih opsi, hindari conflict antara label & input
+  const handleSelectStatus = (value) => {
+    setForm(f => ({ ...f, status: value }))
   }
 
   return (
@@ -87,64 +106,76 @@ export default function RSVP() {
               </p>
             </div>
             <button
-              className="font-elle text-gold text-xs tracking-widest uppercase hover:text-sage-dark transition-colors"
-              onClick={() => { setStatus('idle'); setForm({ nama: '', status: '', jumlah_tamu: 1 }) }}
+              className="font-elle text-gold text-xs tracking-widest uppercase hover:text-sage-dark transition-colors cursor-pointer"
+              onClick={handleReset}
             >
               Isi Ulang
             </button>
           </div>
 
         ) : (
-          /* Form */
-          <form onSubmit={handleSubmit}
-            className="rsvp-form opacity-0 border border-gold/20 bg-white/40 backdrop-blur-sm rounded-sm px-8 py-10 space-y-6"
+          <form
+            onSubmit={handleSubmit}
+            className="rsvp-form border border-gold/20 bg-white/40 backdrop-blur-sm rounded-sm px-8 py-10 space-y-6"
             style={{ boxShadow: '0 4px 32px rgba(180,155,100,0.07)' }}
           >
             {/* Nama */}
             <div className="space-y-2">
-              <label className="font-elle text-gold text-xs tracking-widest uppercase block">Nama Lengkap</label>
+              <label className="font-elle text-gold text-xs tracking-widest uppercase block">
+                Nama Lengkap
+              </label>
               <input
-                type="text" value={form.nama} required
+                type="text"
+                value={form.nama}
+                required
                 onChange={e => setForm(f => ({ ...f, nama: e.target.value }))}
                 placeholder="Masukkan nama Anda"
                 className="w-full bg-transparent border-b border-gold/30 focus:border-gold/70 outline-none py-2 font-cormorant text-sage-dark text-lg placeholder:text-sage-dark/30 transition-colors duration-300"
               />
             </div>
 
-            {/* Kehadiran */}
+            {/* Kehadiran — FIX 2: pakai div + onClick, bukan label wrapping input */}
             <div className="space-y-3">
-              <label className="font-elle text-gold text-xs tracking-widest uppercase block">Konfirmasi Kehadiran</label>
+              <p className="font-elle text-gold text-xs tracking-widest uppercase">
+                Konfirmasi Kehadiran
+              </p>
               <div className="space-y-2">
                 {ATTENDANCE_OPTIONS.map(opt => (
-                  <label key={opt.value}
-                    className={`flex items-center gap-3 cursor-pointer py-2.5 px-3 border transition-all duration-300 rounded-sm
+                  <div
+                    key={opt.value}
+                    onClick={() => handleSelectStatus(opt.value)}
+                    className={`flex items-center gap-3 cursor-pointer py-2.5 px-3 border transition-all duration-200 rounded-sm select-none
                       ${form.status === opt.value
                         ? 'border-gold/50 bg-gold/5'
                         : 'border-transparent hover:border-gold/20'}`}
                   >
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300
+                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-200
                       ${form.status === opt.value ? 'border-gold' : 'border-gold/30'}`}>
-                      {form.status === opt.value && <div className="w-2 h-2 rounded-full bg-gold" />}
+                      {form.status === opt.value && (
+                        <div className="w-2 h-2 rounded-full bg-gold" />
+                      )}
                     </div>
-                    <input
-                      type="radio" value={opt.value} className="hidden"
-                      onChange={() => setForm(f => ({ ...f, status: opt.value }))}
-                    />
-                    <span className="font-cormorant text-sage-dark text-base">{opt.label}</span>
-                  </label>
+                    <span className="font-cormorant text-sage-dark text-base">
+                      {opt.label}
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Jumlah tamu — hanya muncul jika hadir */}
+            {/* Jumlah tamu */}
             {form.status === 'hadir' && (
               <div className="space-y-2">
-                <label className="font-elle text-gold text-xs tracking-widest uppercase block">Jumlah Tamu</label>
+                <label className="font-elle text-gold text-xs tracking-widest uppercase block">
+                  Jumlah Tamu
+                </label>
                 <div className="flex items-center gap-4">
                   {[1, 2, 3, 4].map(n => (
-                    <button key={n} type="button"
+                    <button
+                      key={n}
+                      type="button"
                       onClick={() => setForm(f => ({ ...f, jumlah_tamu: n }))}
-                      className={`w-10 h-10 border text-sm font-cormorant transition-all duration-300
+                      className={`w-10 h-10 border text-sm font-cormorant transition-all duration-200 cursor-pointer
                         ${form.jumlah_tamu === n
                           ? 'border-gold bg-gold text-cream'
                           : 'border-gold/30 text-sage-dark hover:border-gold/60'}`}
@@ -164,8 +195,9 @@ export default function RSVP() {
             )}
 
             <button
-              type="submit" disabled={status === 'loading'}
-              className="w-full py-3.5 border border-gold/50 text-gold font-elle text-xs tracking-widest uppercase hover:bg-gold hover:text-cream transition-all duration-300 disabled:opacity-50"
+              type="submit"
+              disabled={status === 'loading'}
+              className="w-full py-3.5 border border-gold/50 text-gold font-elle text-xs tracking-widest uppercase hover:bg-gold hover:text-cream transition-all duration-300 disabled:opacity-50 cursor-pointer"
             >
               {status === 'loading' ? 'Mengirim...' : 'Kirim Konfirmasi'}
             </button>

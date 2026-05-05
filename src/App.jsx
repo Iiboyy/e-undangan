@@ -34,7 +34,6 @@ function App() {
     setIsOpened(true)
   }
 
-  // --- Efek Audio & Musik ---
   useEffect(() => {
     if (isAdmin) return
     const handleVisibilityChange = () => {
@@ -82,7 +81,6 @@ function App() {
       <audio ref={audioRef} src="/music.mp3" loop preload="auto" />
       
       {!isOpened ? (
-        /* Kirim handleOpen ke komponen Opening */
         <Opening onOpen={handleOpen} />
       ) : (
         <>
@@ -91,7 +89,6 @@ function App() {
             <Couple />
             <LoveStory />
             <Countdown />
-            {/* 🔥 SEKARANG DATA GUEST DIKIRIM KE EVENTS AGAR JAM KLOTER MUNCUL */}
             <Events guest={guest} /> 
             <Gallery />
             <RSVP />

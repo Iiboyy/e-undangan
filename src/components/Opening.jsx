@@ -1,69 +1,63 @@
-import { useEffect, useRef, useState } from 'react'
-import { supabase } from '../lib/supabase'
-import gsap from 'gsap'
+import { useEffect, useRef, useState } from "react";
+import { supabase } from "../lib/supabase";
+import gsap from "gsap";
+import hero1 from "../assets/images/hero1.jpg";
+import hero2 from "../assets/images/hero2.jpg";
+import hero3 from "../assets/images/hero3.jpg";
 
-// images
-import hero1 from '../assets/images/hero1.jpg'
-import hero2 from '../assets/images/hero2.jpg'
-import hero3 from '../assets/images/hero3.jpg'
-
-const SLIDESHOW_IMAGES = [hero1, hero2, hero3]
+const SLIDESHOW_IMAGES = [hero1, hero2, hero3];
 
 export default function Opening({ onOpen }) {
-  const params = new URLSearchParams(window.location.search)
-  const id = params.get('id')
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
 
-  const containerRef = useRef(null)
-  // namaRef dihapus karena kita akan menggunakan State langsung di JSX agar lebih stabil
+  const containerRef = useRef(null);
 
-  const [guest, setGuest] = useState(null)
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [nextSlide, setNextSlide] = useState(1)
-  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [guest, setGuest] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [nextSlide, setNextSlide] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const currentImgRef = useRef(null)
-  const nextImgRef = useRef(null)
-  const slideIntervalRef = useRef(null)
+  const currentImgRef = useRef(null);
+  const nextImgRef = useRef(null);
+  const slideIntervalRef = useRef(null);
 
-  // 🔥 Fetch data tamu
   useEffect(() => {
     const fetchGuest = async () => {
-      if (!id) return
+      if (!id) return;
 
-      // Menggunakan kolom 'kode' sesuai struktur di Supabase/Excel kamu
       const { data, error } = await supabase
-        .from('guests')
-        .select('nama, kloter, jam')
-        .eq('kode', id) 
-        .single()
+        .from("guests")
+        .select("nama, kloter, jam")
+        .eq("kode", id)
+        .single();
 
       if (error) {
-        console.error('Error fetching guest:', error.message)
-        return
+        console.error("Error fetching guest:", error.message);
+        return;
       }
 
       if (data) {
-        setGuest(data)
+        setGuest(data);
       }
-    }
+    };
 
-    fetchGuest()
+    fetchGuest();
 
     gsap.fromTo(
       containerRef.current,
       { opacity: 0 },
-      { opacity: 1, duration: 1.5, ease: 'power2.out' }
-    )
-  }, [id])
+      { opacity: 1, duration: 1.5, ease: "power2.out" },
+    );
+  }, [id]);
 
-  // 🔥 Slideshow Logic
   useEffect(() => {
-    if (SLIDESHOW_IMAGES.length <= 1) return
+    if (SLIDESHOW_IMAGES.length <= 1) return;
 
     slideIntervalRef.current = setInterval(() => {
-      const next = (currentSlide + 1) % SLIDESHOW_IMAGES.length
-      setNextSlide(next)
-      setIsTransitioning(true)
+      const next = (currentSlide + 1) % SLIDESHOW_IMAGES.length;
+      setNextSlide(next);
+      setIsTransitioning(true);
 
       if (nextImgRef.current) {
         gsap.fromTo(
@@ -72,35 +66,32 @@ export default function Opening({ onOpen }) {
           {
             opacity: 1,
             duration: 1.9,
-            ease: 'power2.inOut',
+            ease: "power2.inOut",
             onComplete: () => {
-              setCurrentSlide(next)
-              setIsTransitioning(false)
-            }
-          }
-        )
+              setCurrentSlide(next);
+              setIsTransitioning(false);
+            },
+          },
+        );
       }
-    }, 4000)
+    }, 4000);
 
-    return () => clearInterval(slideIntervalRef.current)
-  }, [currentSlide])
+    return () => clearInterval(slideIntervalRef.current);
+  }, [currentSlide]);
 
-// Di dalam Opening.jsx bagian handleOpen:
-const handleOpen = () => {
-  clearInterval(slideIntervalRef.current)
-  gsap.to(containerRef.current, {
-    opacity: 0,
-    y: -30,
-    duration: 0.8,
-    ease: 'power2.in',
-    onComplete: () => onOpen(guest) // <--- PASTIKAN variabel 'guest' dikirim di sini!
-  })
-}
+  const handleOpen = () => {
+    clearInterval(slideIntervalRef.current);
+    gsap.to(containerRef.current, {
+      opacity: 0,
+      y: -30,
+      duration: 0.8,
+      ease: "power2.in",
+      onComplete: () => onOpen(guest),
+    });
+  };
 
   return (
     <div ref={containerRef} className="fixed inset-0 z-50 flex">
-      
-      {/* LEFT - Slideshow Section */}
       <div className="hidden lg:block relative flex-1 overflow-hidden">
         <img
           ref={currentImgRef}
@@ -119,17 +110,17 @@ const handleOpen = () => {
           />
         )}
 
-        {/* Overlay Gradient */}
         <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-[#2D3D2A] opacity-80" />
 
-        {/* Indicators */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
           {SLIDESHOW_IMAGES.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
               className={`transition-all duration-500 rounded-full ${
-                i === currentSlide ? 'w-6 h-1.5 bg-gold' : 'w-1.5 h-1.5 bg-gold/40'
+                i === currentSlide
+                  ? "w-6 h-1.5 bg-gold"
+                  : "w-1.5 h-1.5 bg-gold/40"
               }`}
             />
           ))}
@@ -142,9 +133,7 @@ const handleOpen = () => {
         </div>
       </div>
 
-      {/* RIGHT - Content Section */}
       <div className="w-full lg:w-[420px] xl:w-[480px] bg-sage-dark flex flex-col items-center justify-center relative px-10 shrink-0">
-        
         <div className="absolute top-8 left-0 right-0 flex justify-center">
           <div className="w-32 h-px bg-gold-light opacity-60" />
         </div>
@@ -164,13 +153,12 @@ const handleOpen = () => {
 
           <div className="w-16 h-px bg-gold mx-auto opacity-50" />
 
-          {/* 🔥 Display Nama Tamu & Jam */}
           <div className="space-y-2 py-4">
             <p className="text-cream/80 font-cormorant text-lg italic">
               Kepada Yth.
             </p>
             <h2 className="text-cream font-cormorant text-2xl xl:text-3xl font-medium">
-              {guest ? guest.nama : 'Tamu Undangan'}
+              {guest ? guest.nama : "Tamu Undangan"}
             </h2>
             {guest?.jam && (
               <p className="text-gold-light/60 font-elle text-[10px] tracking-[0.2em] uppercase mt-2">
@@ -192,5 +180,5 @@ const handleOpen = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
